@@ -85,7 +85,7 @@ namespace RRes.ViewModels
         private bool _isRestartingVanguard;
         private bool _isKillingProcesses;
         private bool _isCheckingUpdate;
-        private string _updateStatusMessage = "Versi saat ini: v1.0.0 (Klik untuk periksa)";
+        private string _updateStatusMessage = "Versi saat ini: v1.0.1 (Klik untuk periksa)";
         private string _updateStatusColor = "#8B949E";
         private bool _hasUpdateAvailable;
         private string _latestVersionString = "";

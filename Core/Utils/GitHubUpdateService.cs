@@ -38,7 +38,7 @@ namespace RRes.Core.Utils
         public static string GetCurrentVersionString()
         {
             var ver = Assembly.GetExecutingAssembly().GetName().Version;
-            return ver != null ? $"{ver.Major}.{ver.Minor}.{ver.Build}" : "1.0.0";
+            return ver != null ? $"{ver.Major}.{ver.Minor}.{ver.Build}" : "1.0.1";
         }
 
         /// <summary>

@@ -9,7 +9,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>RRes</AssemblyName>
     <RootNamespace>RRes</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>RRes Team</Authors>
     <Description>Valorant Resolution Switcher &amp; Windows Display Utility</Description>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
