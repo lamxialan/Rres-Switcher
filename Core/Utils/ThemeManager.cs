@@ -56,11 +56,11 @@ namespace RRes.Core.Utils
 
                     case ThemeDark:
                     default:
-                        // Fluent Dark Charcoal (Standar Rekomendasi: #16191E / #1E222B / #2C3240)
-                        bgDark = Color.FromRgb(0x16, 0x19, 0x1E);
-                        bgCard = Color.FromRgb(0x1E, 0x22, 0x2B);
-                        bgCardHover = Color.FromRgb(0x26, 0x2C, 0x37);
-                        borderDark = Color.FromRgb(0x2C, 0x32, 0x40);
+                        // Fluent Dark Charcoal Soft (#18191E / #22252E / #2E3340)
+                        bgDark = Color.FromRgb(0x18, 0x19, 0x1E);
+                        bgCard = Color.FromRgb(0x22, 0x25, 0x2E);
+                        bgCardHover = Color.FromRgb(0x2A, 0x2E, 0x39);
+                        borderDark = Color.FromRgb(0x2E, 0x33, 0x40);
                         textPrimary = Color.FromRgb(0xF0, 0xF6, 0xFC);
                         textSecondary = Color.FromRgb(0x9E, 0x9E, 0x9E);
                         textMuted = Color.FromRgb(0x76, 0x7F, 0x8D);

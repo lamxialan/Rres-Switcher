@@ -135,7 +135,7 @@ namespace RRes.ViewModels
         public ObservableCollection<MonitorInfo> Monitors { get; } = new();
         public ObservableCollection<string> ActivityLogs { get; } = new();
 
-        private string _selectedRatioFilter = "Semua";
+        private string _selectedRatioFilter = "4:3";
         public string SelectedRatioFilter
         {
             get => _selectedRatioFilter;
@@ -1668,7 +1668,7 @@ namespace RRes.ViewModels
                 Category = "Wide Stretched"
             });
 
-            SelectedPreset = Presets.FirstOrDefault();
+            SelectedPreset = Presets.FirstOrDefault(p => string.Equals(p.AspectRatio, "4:3", StringComparison.OrdinalIgnoreCase)) ?? Presets.FirstOrDefault();
             UpdateFilteredPresets();
             UpdateRefreshRatesForPreset(SelectedPreset?.Width ?? 0, SelectedPreset?.Height ?? 0);
             LoadProfiles();

@@ -37,6 +37,8 @@ namespace RRes
                 {
                     _trayManager?.ShowNotification(title, msg);
                 };
+
+                StateChanged += MainWindow_StateChanged;
             }
             catch (Exception ex)
             {
@@ -47,6 +49,60 @@ namespace RRes
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 throw;
+            }
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleWindowState();
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void TitleBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                ToggleWindowState();
+            }
+            else if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
+        }
+
+        private void ToggleWindowState()
+        {
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private void MainWindow_StateChanged(object? sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                if (MaximizeIconText != null) MaximizeIconText.Text = "🗗";
+                if (RootWindowBorder != null)
+                {
+                    RootWindowBorder.BorderThickness = new Thickness(0);
+                    RootWindowBorder.Margin = new Thickness(7);
+                }
+            }
+            else
+            {
+                if (MaximizeIconText != null) MaximizeIconText.Text = "▢";
+                if (RootWindowBorder != null)
+                {
+                    RootWindowBorder.BorderThickness = new Thickness(1);
+                    RootWindowBorder.Margin = new Thickness(0);
+                }
             }
         }
 

@@ -14,11 +14,11 @@
         <converters:InverseBoolToVisConverter x:Key="InverseBoolToVisConverter" />
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
 
-        <!-- Theme Color Brushes (Modern Charcoal Dark Default) -->
-        <SolidColorBrush x:Key="BgDarkBrush" Color="#16191E" />
-        <SolidColorBrush x:Key="BgCardBrush" Color="#1E222B" />
-        <SolidColorBrush x:Key="BgCardHoverBrush" Color="#262C37" />
-        <SolidColorBrush x:Key="BorderDarkBrush" Color="#2C3240" />
+        <!-- Theme Color Brushes (Modern Soft Charcoal Dark Default) -->
+        <SolidColorBrush x:Key="BgDarkBrush" Color="#18191E" />
+        <SolidColorBrush x:Key="BgCardBrush" Color="#22252E" />
+        <SolidColorBrush x:Key="BgCardHoverBrush" Color="#2A2E39" />
+        <SolidColorBrush x:Key="BorderDarkBrush" Color="#2E3340" />
         <SolidColorBrush x:Key="BorderFocusBrush" Color="#FF4655" />
         <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F0F6FC" />
         <SolidColorBrush x:Key="TextMutedBrush" Color="#767F8D" />
@@ -106,7 +106,7 @@
             </Setter>
         </Style>
 
-        <!-- Modern Pill Toggle Switch -->
+        <!-- Modern Pill Toggle Switch (Windows 11 Fluent Style) -->
         <Style x:Key="ModernToggleSwitch" TargetType="{x:Type CheckBox}">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -114,23 +114,23 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type CheckBox}">
                         <Border x:Name="SwitchTrack"
-                                Width="44"
-                                Height="24"
-                                CornerRadius="12"
-                                Background="#1A202C"
-                                BorderBrush="#30363D"
+                                Width="40"
+                                Height="22"
+                                CornerRadius="11"
+                                Background="{DynamicResource BgCardHoverBrush}"
+                                BorderBrush="{DynamicResource BorderDarkBrush}"
                                 BorderThickness="1.5">
                             <Grid>
-                                <!-- Emerald Green Background Layer when ON -->
+                                <!-- Accent Color Background Layer when ON -->
                                 <Border x:Name="GlowLayer"
-                                        CornerRadius="12"
-                                        Background="#10B981"
+                                        CornerRadius="10"
+                                        Background="{DynamicResource ValoRedBrush}"
                                         Opacity="0" />
-                                <!-- Sliding Thumb -->
+                                <!-- Sliding Circular Thumb -->
                                 <Ellipse x:Name="SwitchThumb"
-                                         Width="16"
-                                         Height="16"
-                                         Fill="#8B949E"
+                                         Width="14"
+                                         Height="14"
+                                         Fill="{DynamicResource TextSecondaryBrush}"
                                          HorizontalAlignment="Left"
                                          Margin="3,0,0,0">
                                     <Ellipse.Effect>
@@ -142,13 +142,13 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="GlowLayer" Property="Opacity" Value="1" />
-                                <Setter TargetName="SwitchTrack" Property="BorderBrush" Value="#059669" />
+                                <Setter TargetName="SwitchTrack" Property="BorderBrush" Value="{DynamicResource ValoRedBrush}" />
                                 <Setter TargetName="SwitchThumb" Property="HorizontalAlignment" Value="Right" />
                                 <Setter TargetName="SwitchThumb" Property="Margin" Value="0,0,3,0" />
                                 <Setter TargetName="SwitchThumb" Property="Fill" Value="#FFFFFF" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="SwitchTrack" Property="BorderBrush" Value="#38BDF8" />
+                                <Setter TargetName="SwitchTrack" Property="BorderBrush" Value="{DynamicResource ValoRedHoverBrush}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.4" />
