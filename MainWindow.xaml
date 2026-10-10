@@ -376,27 +376,23 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Sisi Kiri: Mini 4-Color Lego Logo + Judul Jendela -->
+                    <!-- Sisi Kiri: Logo R Runcing Splash + Judul Jendela -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,0,0">
-                        <!-- Mini 4-Color Lego Icon -->
-                        <Grid Width="14" Height="14" Margin="0,0,9,0" VerticalAlignment="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <!-- Top-Left: Red -->
-                            <Border Grid.Row="0" Grid.Column="0" Background="#FF4655" CornerRadius="1.5" Margin="0,0,1,1" />
-                            <!-- Top-Right: Cyan -->
-                            <Border Grid.Row="0" Grid.Column="1" Background="#06B6D4" CornerRadius="1.5" Margin="1,0,0,1" />
-                            <!-- Bottom-Left: Amber -->
-                            <Border Grid.Row="1" Grid.Column="0" Background="#F59E0B" CornerRadius="1.5" Margin="0,1,1,0" />
-                            <!-- Bottom-Right: Green -->
-                            <Border Grid.Row="1" Grid.Column="1" Background="#10B981" CornerRadius="1.5" Margin="1,1,0,0" />
-                        </Grid>
+                        <!-- Logo 'R' Runcing dengan Outer Glow Merah (#FF4655) -->
+                        <Image Source="pack://application:,,,/Assets/splash_logo.png"
+                               Width="16"
+                               Height="16"
+                               Stretch="Uniform"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0">
+                            <Image.Effect>
+                                <DropShadowEffect Color="#FF4655"
+                                                  BlurRadius="8"
+                                                  ShadowDepth="0"
+                                                  Opacity="0.85" />
+                            </Image.Effect>
+                        </Image>
 
                         <!-- Window Title Text -->
                         <TextBlock Text="RRes - Valorant Resolution Switcher"
@@ -483,15 +479,21 @@
                                     VerticalAlignment="Center"
                                     Margin="8,0,0,0"
                                     Visibility="{Binding IsSidebarExpanded, Converter={StaticResource BoolToVisConverter}}">
-                            <Border Background="{DynamicResource ValoRedBrush}"
-                                    CornerRadius="4"
-                                    Padding="6,2"
-                                    Margin="0,0,6,0">
-                                <TextBlock Text="R"
-                                           FontWeight="Black"
-                                           FontSize="13"
-                                           Foreground="#FFFFFF" />
-                            </Border>
+                            <!-- Logo 'R' Runcing dengan Outer Glow Merah (#FF4655) -->
+                            <Image Source="pack://application:,,,/Assets/splash_logo.png"
+                                   Width="22"
+                                   Height="22"
+                                   Stretch="Uniform"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0">
+                                <Image.Effect>
+                                    <DropShadowEffect Color="#FF4655"
+                                                      BlurRadius="12"
+                                                      ShadowDepth="0"
+                                                      Opacity="0.9" />
+                                </Image.Effect>
+                            </Image>
                             <TextBlock Text="RRES"
                                        FontWeight="Bold"
                                        FontSize="14"
