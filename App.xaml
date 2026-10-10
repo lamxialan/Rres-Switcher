@@ -5,8 +5,8 @@
              xmlns:converters="clr-namespace:RRes.Converters">
     <Application.Resources>
         <!-- Typography Resources -->
-        <FontFamily x:Key="AppFontFamily">Segoe UI Variable, Segoe UI, Inter, Roboto, Arial</FontFamily>
-        <sys:Double x:Key="AppBaseFontSize">12.5</sys:Double>
+        <FontFamily x:Key="AppFontFamily">Segoe UI Variable Display, Segoe UI Variable, Segoe UI, Inter, Roboto, Consolas, JetBrains Mono, Arial</FontFamily>
+        <sys:Double x:Key="AppBaseFontSize">12.0</sys:Double>
 
         <!-- Converters -->
         <converters:StatusTypeToBrushConverter x:Key="StatusTypeToBrushConverter" />
@@ -14,11 +14,11 @@
         <converters:InverseBoolToVisConverter x:Key="InverseBoolToVisConverter" />
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
 
-        <!-- Theme Color Brushes (Modern Soft Charcoal Dark Default) -->
-        <SolidColorBrush x:Key="BgDarkBrush" Color="#18191E" />
-        <SolidColorBrush x:Key="BgCardBrush" Color="#22252E" />
-        <SolidColorBrush x:Key="BgCardHoverBrush" Color="#2A2E39" />
-        <SolidColorBrush x:Key="BorderDarkBrush" Color="#2E3340" />
+        <!-- Theme Color Brushes (Modern Soft Charcoal Dark Default: #16191E) -->
+        <SolidColorBrush x:Key="BgDarkBrush" Color="#16191E" />
+        <SolidColorBrush x:Key="BgCardBrush" Color="#1E222B" />
+        <SolidColorBrush x:Key="BgCardHoverBrush" Color="#262C37" />
+        <SolidColorBrush x:Key="BorderDarkBrush" Color="#2C3240" />
         <SolidColorBrush x:Key="BorderFocusBrush" Color="#FF4655" />
         <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F0F6FC" />
         <SolidColorBrush x:Key="TextMutedBrush" Color="#767F8D" />
@@ -58,7 +58,7 @@
 
         <!-- Custom Dark CheckBox -->
         <Style x:Key="ModernCheckBox" TargetType="{x:Type CheckBox}">
-            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -68,14 +68,14 @@
                             <BulletDecorator.Bullet>
                                 <Border x:Name="CheckBorder"
                                         Width="18" Height="18"
-                                        Background="#0D1117"
-                                        BorderBrush="{StaticResource BorderDarkBrush}"
+                                        Background="{DynamicResource BgDarkBrush}"
+                                        BorderBrush="{DynamicResource BorderDarkBrush}"
                                         BorderThickness="1.5"
                                         CornerRadius="4"
                                         VerticalAlignment="Center">
                                     <Path x:Name="CheckMark"
                                           Data="M 3 8 L 7 12 L 13 4"
-                                          Stroke="#FF4655"
+                                          Stroke="{DynamicResource ValoRedBrush}"
                                           StrokeThickness="2"
                                           StrokeStartLineCap="Round"
                                           StrokeEndLineCap="Round"
@@ -91,11 +91,11 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
-                                <Setter TargetName="CheckBorder" Property="BorderBrush" Value="{StaticResource ValoRedBrush}" />
-                                <Setter TargetName="CheckBorder" Property="Background" Value="#251216" />
+                                <Setter TargetName="CheckBorder" Property="BorderBrush" Value="{DynamicResource ValoRedBrush}" />
+                                <Setter TargetName="CheckBorder" Property="Background" Value="{DynamicResource AccentSubtleBrush}" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="CheckBorder" Property="BorderBrush" Value="{StaticResource ValoRedHoverBrush}" />
+                                <Setter TargetName="CheckBorder" Property="BorderBrush" Value="{DynamicResource ValoRedHoverBrush}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.5" />
@@ -169,27 +169,27 @@
                 <Border x:Name="Border"
                         Grid.ColumnSpan="2"
                         CornerRadius="6"
-                        Background="{StaticResource BgCardBrush}"
-                        BorderBrush="{StaticResource BorderDarkBrush}"
+                        Background="{DynamicResource BgCardBrush}"
+                        BorderBrush="{DynamicResource BorderDarkBrush}"
                         BorderThickness="1" />
                 <Border Grid.Column="0"
                         Margin="1"
                         Background="Transparent"
                         CornerRadius="5,0,0,5" />
                 <Path x:Name="Arrow"
-                      Grid.Column="1"
-                      Fill="{StaticResource TextMutedBrush}"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Data="M 0 0 L 4 4 L 8 0 Z" />
+                       Grid.Column="1"
+                       Fill="{DynamicResource TextMutedBrush}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Data="M 0 0 L 4 4 L 8 0 Z" />
             </Grid>
             <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
-                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ValoRedBrush}" />
-                    <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource TextPrimaryBrush}" />
+                    <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ValoRedBrush}" />
+                    <Setter TargetName="Arrow" Property="Fill" Value="{DynamicResource TextPrimaryBrush}" />
                 </Trigger>
                 <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ValoRedBrush}" />
+                    <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ValoRedBrush}" />
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
@@ -205,7 +205,7 @@
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
             <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
             <Setter Property="FontSize" Value="13" />
-            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
             <Setter Property="MinHeight" Value="38" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -237,9 +237,9 @@
                                       MinWidth="{TemplateBinding ActualWidth}"
                                       MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
-                                            Background="{StaticResource BgCardBrush}"
+                                            Background="{DynamicResource BgCardBrush}"
                                             BorderThickness="1"
-                                            BorderBrush="{StaticResource BorderDarkBrush}"
+                                            BorderBrush="{DynamicResource BorderDarkBrush}"
                                             CornerRadius="6"
                                             Margin="0,4,0,0">
                                         <Border.Effect>
@@ -262,7 +262,7 @@
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Padding" Value="10,8" />
-            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBoxItem}">
@@ -275,12 +275,12 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsHighlighted" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="#212631" />
-                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource BgCardHoverBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="#2F1C24" />
-                                <Setter Property="Foreground" Value="{StaticResource ValoRedBrush}" />
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource AccentSubtleBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource ValoRedBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

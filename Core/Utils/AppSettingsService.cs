@@ -26,9 +26,11 @@ namespace RRes.Core.Utils
 
             string rresDir = Path.Combine(appData, "RRes");
             EnsureDirectoryExists(rresDir);
-            _settingsFilePath = Path.Combine(rresDir, "config.json");
+            _settingsFilePath = Path.Combine(rresDir, "AppSettings.json");
+            _legacySettingsFilePath = Path.Combine(rresDir, "config.json");
         }
 
+        private readonly string _legacySettingsFilePath;
         public string SettingsFilePath => _settingsFilePath;
 
         private void EnsureDirectoryExists(string? dir = null)
@@ -54,9 +56,13 @@ namespace RRes.Core.Utils
                 try
                 {
                     EnsureDirectoryExists();
-                    if (File.Exists(_settingsFilePath))
+                    string targetFile = File.Exists(_settingsFilePath)
+                        ? _settingsFilePath
+                        : (File.Exists(_legacySettingsFilePath) ? _legacySettingsFilePath : string.Empty);
+
+                    if (!string.IsNullOrEmpty(targetFile) && File.Exists(targetFile))
                     {
-                        string json = File.ReadAllText(_settingsFilePath);
+                        string json = File.ReadAllText(targetFile);
                         var settings = JsonSerializer.Deserialize<AppSettings>(json, JsonOptions);
                         if (settings != null)
                         {
@@ -87,6 +93,17 @@ namespace RRes.Core.Utils
                     settings.LastUpdated = DateTime.Now;
                     string json = JsonSerializer.Serialize(settings, JsonOptions);
                     File.WriteAllText(_settingsFilePath, json);
+                    try
+                    {
+                        File.WriteAllText(_legacySettingsFilePath, json);
+                    }
+                    catch { }
+                    try
+                    {
+                        string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AppSettings.json");
+                        File.WriteAllText(localPath, json);
+                    }
+                    catch { }
                 }
                 catch (Exception ex)
                 {

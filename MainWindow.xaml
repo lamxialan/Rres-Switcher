@@ -199,6 +199,14 @@
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="PillBorder" Property="BorderBrush" Value="{DynamicResource ValoRedHoverBrush}" />
                                 <Setter TargetName="PillBorder" Property="Background" Value="{DynamicResource BgCardHoverBrush}" />
+                                <Setter TargetName="PillBorder" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="#FF4655" Opacity="0.38" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="PillBorder" Property="Background" Value="{DynamicResource AccentSubtleBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -622,12 +630,13 @@
                             <!-- Hero Primary Action Button: APPLY & LAUNCH -->
                             <Button Style="{DynamicResource PrimaryButton}"
                                     Command="{Binding ApplyAndLaunchCommand}"
+                                    IsEnabled="{Binding IsApplyingResolution, Converter={StaticResource InverseBooleanConverter}}"
                                     Height="38"
                                     Margin="0,0,0,6"
                                     ToolTip="Terapkan resolusi &amp; buka client game Valorant">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="▶" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                    <TextBlock Text="APPLY &amp; LAUNCH" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding ApplyButtonIcon}" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding ApplyButtonText}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Button>
 
@@ -670,10 +679,11 @@
                         <StackPanel Visibility="{Binding IsSidebarExpanded, Converter={StaticResource InverseBoolToVisConverter}}">
                             <Button Style="{DynamicResource PrimaryButton}"
                                     Command="{Binding ApplyAndLaunchCommand}"
+                                    IsEnabled="{Binding IsApplyingResolution, Converter={StaticResource InverseBooleanConverter}}"
                                     Height="34"
                                     Padding="0"
                                     ToolTip="APPLY &amp; LAUNCH VALORANT">
-                                <TextBlock Text="▶" FontSize="13" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding ApplyButtonIcon}" FontSize="13" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Button>
                             <Button Style="{DynamicResource GhostButton}"
                                     Command="{Binding ApplyResolutionCommand}"
@@ -1239,7 +1249,12 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
-                                            <TextBlock Text="Kunci Config (Read-Only)" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Kunci Config (Read-Only)" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                                <Border Width="16" Height="16" CornerRadius="8" Background="{DynamicResource BgDarkBrush}" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="1" Margin="6,0,0,0" ToolTip="Kunci Config (Read-Only)&#x0a;&#x0a;Opsi ini mencegah game VALORANT mereset resolusi custom otomatis saat login/restart. File GameUserSettings.ini dikunci dengan atribut Read-Only setelah resolusi custom ditulis." Cursor="Help" VerticalAlignment="Center">
+                                                    <TextBlock Text="?" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource ValoRedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                            </StackPanel>
                                             <TextBlock Text="Mencegah Valorant mereset resolusi otomatis saat login/restart" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
                                         </StackPanel>
                                         <CheckBox Grid.Column="1"
@@ -1277,7 +1292,12 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
-                                            <TextBlock Text="Ubah Resolusi Desktop (user32.dll)" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Ubah Resolusi Desktop (user32.dll)" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                                <Border Width="16" Height="16" CornerRadius="8" Background="{DynamicResource BgDarkBrush}" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="1" Margin="6,0,0,0" ToolTip="Ubah Resolusi Desktop (user32.dll)&#x0a;&#x0a;Fungsi switch resolusi instan tanpa lag. Menggunakan Windows Win32 API user32.dll (ChangeDisplaySettingsEx) untuk mengubah resolusi display monitor secara langsung." Cursor="Help" VerticalAlignment="Center">
+                                                    <TextBlock Text="?" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource ValoRedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                            </StackPanel>
                                             <TextBlock Text="Ubah resolusi Windows agar mode stretched aktif instan tanpa restart" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
                                         </StackPanel>
                                         <CheckBox Grid.Column="1"
@@ -1296,7 +1316,12 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
-                                            <TextBlock Text="Auto-Revert Saat Game Ditutup" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Auto-Revert Saat Game Ditutup" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                                <Border Width="16" Height="16" CornerRadius="8" Background="{DynamicResource BgDarkBrush}" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="1" Margin="6,0,0,0" ToolTip="Auto-Revert Saat Game Ditutup&#x0a;&#x0a;Memantau proses VALORANT di latar belakang. Ketika game keluar/ditutup, resolusi monitor Windows otomatis dikembalikan ke native disertai notifikasi visual &amp; tray." Cursor="Help" VerticalAlignment="Center">
+                                                    <TextBlock Text="?" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource ValoRedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                            </StackPanel>
                                             <TextBlock Text="Watcher memantau proses VALORANT dan otomatis revert ke Native saat keluar" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
                                         </StackPanel>
                                         <CheckBox Grid.Column="1"
@@ -2838,7 +2863,7 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBlock Text="🖤" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,6" />
                                             <TextBlock Text="OLED Black" FontWeight="Bold" FontSize="11.5" HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}" />
-                                            <TextBlock Text="Pure Pitch-Black" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                                            <TextBlock Text="Pitch Black (#0B0C0E)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,0" />
                                         </StackPanel>
                                     </Button>
 
@@ -2850,7 +2875,7 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBlock Text="🌌" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,6" />
                                             <TextBlock Text="Midnight Navy" FontWeight="Bold" FontSize="11.5" HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}" />
-                                            <TextBlock Text="Deep Oceanic Blue" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                                            <TextBlock Text="Deep Oceanic Blue (#0F141C)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,0" />
                                         </StackPanel>
                                     </Button>
 
@@ -2862,7 +2887,7 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBlock Text="☀️" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,6" />
                                             <TextBlock Text="Clean Light" FontWeight="Bold" FontSize="11.5" HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}" />
-                                            <TextBlock Text="Soft Slate / Clean" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                                            <TextBlock Text="Soft Slate (#F3F4F6)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,0" />
                                         </StackPanel>
                                     </Button>
                                 </Grid>
@@ -2925,7 +2950,7 @@
 
                                     <!-- 2. Electric Cyan -->
                                     <Button Command="{Binding SelectAccentColorCommand}"
-                                            CommandParameter="#06B6D4"
+                                            CommandParameter="#00E6D4"
                                             Background="{DynamicResource BgDarkBrush}"
                                             BorderBrush="{DynamicResource BorderDarkBrush}"
                                             BorderThickness="1"
@@ -2936,8 +2961,8 @@
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                        <Border Background="#06B6D4" Width="14" Height="14" CornerRadius="7" Margin="0,0,8,0" />
-                                                        <TextBlock Text="Electric Cyan (#06B6D4)" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                                                        <Border Background="#00E6D4" Width="14" Height="14" CornerRadius="7" Margin="0,0,8,0" />
+                                                        <TextBlock Text="Electric Cyan (#00E6D4)" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
                                                     </StackPanel>
                                                 </Border>
                                             </ControlTemplate>
@@ -2946,7 +2971,7 @@
 
                                     <!-- 3. Cyber Violet -->
                                     <Button Command="{Binding SelectAccentColorCommand}"
-                                            CommandParameter="#8B5CF6"
+                                            CommandParameter="#985CF6"
                                             Background="{DynamicResource BgDarkBrush}"
                                             BorderBrush="{DynamicResource BorderDarkBrush}"
                                             BorderThickness="1"
@@ -2957,8 +2982,8 @@
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                        <Border Background="#8B5CF6" Width="14" Height="14" CornerRadius="7" Margin="0,0,8,0" />
-                                                        <TextBlock Text="Cyber Violet (#8B5CF6)" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                                                        <Border Background="#985CF6" Width="14" Height="14" CornerRadius="7" Margin="0,0,8,0" />
+                                                        <TextBlock Text="Cyber Violet (#985CF6)" FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
                                                     </StackPanel>
                                                 </Border>
                                             </ControlTemplate>
@@ -3073,15 +3098,15 @@
                                                        HorizontalAlignment="Right" />
                                         </Grid>
                                         <Slider Style="{DynamicResource ModernSlider}"
-                                                Minimum="11.0"
-                                                Maximum="15.0"
+                                                Minimum="10.0"
+                                                Maximum="14.0"
                                                 SmallChange="0.5"
                                                 LargeChange="1.0"
                                                 Value="{Binding BaseFontSize, UpdateSourceTrigger=PropertyChanged}" />
                                         <Grid Margin="0,4,0,0">
-                                            <TextBlock Text="11.0 pt (Kompak)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" />
-                                            <TextBlock Text="12.5 pt (Default)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" />
-                                            <TextBlock Text="15.0 pt (Besar)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right" />
+                                            <TextBlock Text="10.0 pt (Kompak)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" />
+                                            <TextBlock Text="12.0 pt (Default)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" />
+                                            <TextBlock Text="14.0 pt (Besar)" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right" />
                                         </Grid>
                                     </StackPanel>
                                 </Grid>
@@ -3278,6 +3303,85 @@
 
                 </StackPanel>
             </ScrollViewer>
+
+            <!-- ======================================================== -->
+            <!-- CUSTOM IN-APP TOAST NOTIFICATION (Dark Gaming Overlay)    -->
+            <!-- ======================================================== -->
+            <Border Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,20,16"
+                    MaxWidth="390"
+                    Panel.ZIndex="999"
+                    Visibility="{Binding IsToastVisible, Converter={StaticResource BoolToVisConverter}}">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="4" Direction="270" Opacity="0.5" Color="#000000" />
+                </Border.Effect>
+                <Border Background="{DynamicResource BgCardBrush}"
+                        BorderBrush="{DynamicResource BorderDarkBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        ClipToBounds="True">
+                    <Grid>
+                        <!-- Left Accent Color Indicator Strip -->
+                        <Border Width="4"
+                                HorizontalAlignment="Left"
+                                Background="{Binding ToastColorHex}" />
+
+                        <!-- Toast Content -->
+                        <Grid Margin="16,10,12,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Toast Icon Avatar -->
+                            <Border Grid.Column="0"
+                                    Width="28" Height="28"
+                                    CornerRadius="14"
+                                    Background="{DynamicResource BgDarkBrush}"
+                                    BorderBrush="{DynamicResource BorderDarkBrush}"
+                                    BorderThickness="1"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,10,0">
+                                <TextBlock Text="{Binding ToastIcon}"
+                                           FontSize="13"
+                                           FontWeight="Bold"
+                                           Foreground="{Binding ToastColorHex}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+
+                            <!-- Toast Texts -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock Text="{Binding ToastTitle}"
+                                           FontWeight="Bold"
+                                           FontSize="11.5"
+                                           Foreground="{DynamicResource TextPrimaryBrush}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding ToastMessage}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,2,0,0"
+                                           MaxHeight="44" />
+                            </StackPanel>
+
+                            <!-- Close / Dismiss Button -->
+                            <Button Grid.Column="2"
+                                    Style="{DynamicResource GhostButton}"
+                                    Command="{Binding DismissToastCommand}"
+                                    Width="22" Height="22"
+                                    Padding="0"
+                                    VerticalAlignment="Top"
+                                    ToolTip="Tutup notifikasi">
+                                <TextBlock Text="✕" FontSize="9.5" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Border>
 
             <!-- Row 2: Status Bar Footer -->
             <Border Grid.Row="2"

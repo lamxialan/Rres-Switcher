@@ -22,10 +22,10 @@ namespace RRes.Core.Utils
                 switch (mode)
                 {
                     case ThemeOled:
-                        // Pure pitch black mode (OLED / AMOLED)
-                        bgDark = Color.FromRgb(0x00, 0x00, 0x00);
-                        bgCard = Color.FromRgb(0x0E, 0x10, 0x14);
-                        bgCardHover = Color.FromRgb(0x18, 0x1B, 0x22);
+                        // OLED Black (#0B0C0E - Pitch Black)
+                        bgDark = Color.FromRgb(0x0B, 0x0C, 0x0E);
+                        bgCard = Color.FromRgb(0x12, 0x14, 0x18);
+                        bgCardHover = Color.FromRgb(0x1A, 0x1D, 0x24);
                         borderDark = Color.FromRgb(0x22, 0x26, 0x30);
                         textPrimary = Color.FromRgb(0xFF, 0xFF, 0xFF);
                         textSecondary = Color.FromRgb(0xA0, 0xA0, 0xA0);
@@ -33,18 +33,18 @@ namespace RRes.Core.Utils
                         break;
 
                     case ThemeMidnight:
-                        // Deep Oceanic Navy Dark
-                        bgDark = Color.FromRgb(0x0B, 0x13, 0x24);
-                        bgCard = Color.FromRgb(0x13, 0x1E, 0x36);
-                        bgCardHover = Color.FromRgb(0x1C, 0x2B, 0x4B);
-                        borderDark = Color.FromRgb(0x2A, 0x3D, 0x64);
+                        // Midnight Navy (#0F141C - Deep Oceanic Blue)
+                        bgDark = Color.FromRgb(0x0F, 0x14, 0x1C);
+                        bgCard = Color.FromRgb(0x15, 0x1D, 0x2A);
+                        bgCardHover = Color.FromRgb(0x1C, 0x26, 0x38);
+                        borderDark = Color.FromRgb(0x28, 0x35, 0x4D);
                         textPrimary = Color.FromRgb(0xF1, 0xF5, 0xF9);
                         textSecondary = Color.FromRgb(0x94, 0xA3, 0xB8);
                         textMuted = Color.FromRgb(0x64, 0x74, 0x8B);
                         break;
 
                     case ThemeLight:
-                        // Clean Slate Light Mode
+                        // Clean Light (#F3F4F6 - Soft Slate)
                         bgDark = Color.FromRgb(0xF3, 0xF4, 0xF6);
                         bgCard = Color.FromRgb(0xFF, 0xFF, 0xFF);
                         bgCardHover = Color.FromRgb(0xEB, 0xEE, 0xF3);
@@ -56,11 +56,11 @@ namespace RRes.Core.Utils
 
                     case ThemeDark:
                     default:
-                        // Fluent Dark Charcoal Soft (#18191E / #22252E / #2E3340)
-                        bgDark = Color.FromRgb(0x18, 0x19, 0x1E);
-                        bgCard = Color.FromRgb(0x22, 0x25, 0x2E);
-                        bgCardHover = Color.FromRgb(0x2A, 0x2E, 0x39);
-                        borderDark = Color.FromRgb(0x2E, 0x33, 0x40);
+                        // Dark Mode (#16191E - Dark Charcoal)
+                        bgDark = Color.FromRgb(0x16, 0x19, 0x1E);
+                        bgCard = Color.FromRgb(0x1E, 0x22, 0x2B);
+                        bgCardHover = Color.FromRgb(0x26, 0x2C, 0x37);
+                        borderDark = Color.FromRgb(0x2C, 0x32, 0x40);
                         textPrimary = Color.FromRgb(0xF0, 0xF6, 0xFC);
                         textSecondary = Color.FromRgb(0x9E, 0x9E, 0x9E);
                         textMuted = Color.FromRgb(0x76, 0x7F, 0x8D);

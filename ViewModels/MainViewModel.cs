@@ -854,8 +854,8 @@ namespace RRes.ViewModels
         // ==========================================
         private string _selectedThemeMode = "Dark";
         private string _selectedAccentColor = "#FF4655";
-        private string _selectedFontFamily = "Segoe UI Variable";
-        private double _baseFontSize = 12.5;
+        private string _selectedFontFamily = "Segoe UI Variable Display";
+        private double _baseFontSize = 12.0;
 
         public string SelectedThemeMode
         {
@@ -901,6 +901,7 @@ namespace RRes.ViewModels
                 {
                     ApplyThemeSettings();
                     SaveAppSettings();
+                    ShowToast("Tipografi Diperbarui", $"Font antarmuka diubah ke '{value}'.", "Info", "🔤");
                 }
             }
         }
@@ -910,7 +911,7 @@ namespace RRes.ViewModels
             get => _baseFontSize;
             set
             {
-                double clamped = Math.Clamp(Math.Round(value, 1), 11.0, 16.0);
+                double clamped = Math.Clamp(Math.Round(value, 1), 10.0, 14.0);
                 if (SetProperty(ref _baseFontSize, clamped))
                 {
                     ApplyThemeSettings();
@@ -921,14 +922,132 @@ namespace RRes.ViewModels
 
         public IReadOnlyList<string> AvailableFonts { get; } = new List<string>
         {
-            "Segoe UI Variable",
-            "Segoe UI",
+            "Segoe UI Variable Display",
             "Inter",
             "Roboto",
-            "Poppins",
-            "JetBrains Mono",
-            "Arial"
+            "Consolas",
+            "JetBrains Mono"
         };
+
+        // ==========================================
+        // APPLYING STATUS & MICRO-INTERACTIONS
+        // ==========================================
+        private bool _isApplyingResolution = false;
+        public bool IsApplyingResolution
+        {
+            get => _isApplyingResolution;
+            set
+            {
+                if (SetProperty(ref _isApplyingResolution, value))
+                {
+                    OnPropertyChanged(nameof(ApplyButtonText));
+                    OnPropertyChanged(nameof(ApplyButtonIcon));
+                    ((RelayCommand)ApplyResolutionCommand).RaiseCanExecuteChanged();
+                    ((RelayCommand)ApplyAndLaunchCommand).RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        public string ApplyButtonText => _isApplyingResolution ? "APPLYING..." : "APPLY & LAUNCH";
+        public string ApplyButtonIcon => _isApplyingResolution ? "⏳" : "▶";
+
+        // ==========================================
+        // CUSTOM IN-APP TOAST NOTIFICATION SYSTEM
+        // ==========================================
+        private bool _isToastVisible = false;
+        private string _toastTitle = string.Empty;
+        private string _toastMessage = string.Empty;
+        private string _toastType = "Success";
+        private string _toastColorHex = "#10B981";
+        private string _toastIcon = "✓";
+        private System.Windows.Threading.DispatcherTimer? _toastTimer;
+
+        public bool IsToastVisible
+        {
+            get => _isToastVisible;
+            set => SetProperty(ref _isToastVisible, value);
+        }
+
+        public string ToastTitle
+        {
+            get => _toastTitle;
+            set => SetProperty(ref _toastTitle, value);
+        }
+
+        public string ToastMessage
+        {
+            get => _toastMessage;
+            set => SetProperty(ref _toastMessage, value);
+        }
+
+        public string ToastType
+        {
+            get => _toastType;
+            set => SetProperty(ref _toastType, value);
+        }
+
+        public string ToastColorHex
+        {
+            get => _toastColorHex;
+            set => SetProperty(ref _toastColorHex, value);
+        }
+
+        public string ToastIcon
+        {
+            get => _toastIcon;
+            set => SetProperty(ref _toastIcon, value);
+        }
+
+        public ICommand DismissToastCommand { get; }
+
+        public void DismissToast()
+        {
+            _toastTimer?.Stop();
+            IsToastVisible = false;
+        }
+
+        public void ShowToast(string title, string message, string type = "Success", string? icon = null)
+        {
+            System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+            {
+                _toastTimer?.Stop();
+
+                ToastTitle = title;
+                ToastMessage = message;
+                ToastType = type;
+
+                ToastColorHex = type switch
+                {
+                    "Error" => "#EF4444",
+                    "Warning" => "#F59E0B",
+                    "Info" => "#00E6D4",
+                    _ => "#10B981" // Success
+                };
+
+                ToastIcon = icon ?? (type switch
+                {
+                    "Error" => "✕",
+                    "Warning" => "⚠",
+                    "Info" => "ℹ",
+                    _ => "✓"
+                });
+
+                IsToastVisible = true;
+
+                if (_toastTimer == null)
+                {
+                    _toastTimer = new System.Windows.Threading.DispatcherTimer();
+                    _toastTimer.Tick += (s, e) =>
+                    {
+                        _toastTimer.Stop();
+                        IsToastVisible = false;
+                    };
+                }
+
+                _toastTimer.Interval = TimeSpan.FromSeconds(3.5);
+                _toastTimer.Start();
+            });
+        }
 
         private void ApplyThemeSettings()
         {
@@ -1068,8 +1187,8 @@ namespace RRes.ViewModels
             // Muat tema & font tersimpan
             _selectedThemeMode = !string.IsNullOrWhiteSpace(loadedSettings.ThemeMode) ? loadedSettings.ThemeMode : "Dark";
             _selectedAccentColor = !string.IsNullOrWhiteSpace(loadedSettings.AccentColor) ? loadedSettings.AccentColor : "#FF4655";
-            _selectedFontFamily = !string.IsNullOrWhiteSpace(loadedSettings.FontFamily) ? loadedSettings.FontFamily : "Segoe UI Variable";
-            _baseFontSize = loadedSettings.BaseFontSize >= 11.0 && loadedSettings.BaseFontSize <= 16.0 ? loadedSettings.BaseFontSize : 12.5;
+            _selectedFontFamily = !string.IsNullOrWhiteSpace(loadedSettings.FontFamily) ? loadedSettings.FontFamily : "Segoe UI Variable Display";
+            _baseFontSize = loadedSettings.BaseFontSize >= 10.0 && loadedSettings.BaseFontSize <= 14.0 ? loadedSettings.BaseFontSize : 12.0;
             ApplyThemeSettings();
 
             _selectedRawAccelPreset = _rawAccelService.CurvePresets.FirstOrDefault(p => p.Type == RawAccelCurveType.Natural) ?? _rawAccelService.CurvePresets[0];
@@ -1088,12 +1207,13 @@ namespace RRes.ViewModels
             _watcher.AutoRevertTriggered += OnWatcherAutoRevert;
             _watcher.StatusNotification += OnWatcherStatusNotification;
 
-            bool CanApply() => !IsBusy && ((!IsCustomResolution && SelectedPreset != null) || (IsCustomResolution && CustomWidth >= 640 && CustomHeight >= 480));
+            bool CanApply() => !IsBusy && !IsApplyingResolution && ((!IsCustomResolution && SelectedPreset != null) || (IsCustomResolution && CustomWidth >= 640 && CustomHeight >= 480));
 
             ApplyResolutionCommand = new RelayCommand(ExecuteApplyResolution, CanApply);
             ApplyAndLaunchCommand = new RelayCommand(ExecuteApplyAndLaunch, CanApply);
             QuickLaunchCommand = new RelayCommand(ExecuteQuickLaunch, () => !IsBusy);
             RevertToNativeCommand = new RelayCommand(ExecuteRevertToNative, () => !IsBusy);
+            DismissToastCommand = new RelayCommand(DismissToast);
 
             RefreshProfilesCommand = new RelayCommand(LoadProfiles);
             OpenConfigFolderCommand = new RelayCommand(ExecuteOpenConfigFolder);
@@ -1121,6 +1241,7 @@ namespace RRes.ViewModels
                     StatusMessage = $"Tema diubah ke: {SelectedThemeMode} Mode";
                     StatusType = "Success";
                     AddLog($"Tema antarmuka diubah ke {SelectedThemeMode}.");
+                    ShowToast("Tema Diperbarui", $"Tema '{SelectedThemeMode}' berhasil diterapkan secara real-time.", "Info", "🎨");
                 }
             });
 
@@ -1132,6 +1253,7 @@ namespace RRes.ViewModels
                     StatusMessage = $"Warna aksen berhasil diperbarui: {SelectedAccentColor}";
                     StatusType = "Success";
                     AddLog($"Warna aksen diubah ke {SelectedAccentColor}.");
+                    ShowToast("Warna Aksen Diperbarui", $"Aksen '{SelectedAccentColor}' aktif pada seluruh tombol & indikator.", "Info", "✨");
                 }
             });
 
@@ -1139,11 +1261,12 @@ namespace RRes.ViewModels
             {
                 SelectedThemeMode = "Dark";
                 SelectedAccentColor = "#FF4655";
-                SelectedFontFamily = "Segoe UI Variable";
-                BaseFontSize = 12.5;
+                SelectedFontFamily = "Segoe UI Variable Display";
+                BaseFontSize = 12.0;
                 StatusMessage = "Pengaturan tema dan font direset ke default.";
                 StatusType = "Info";
                 AddLog("Pengaturan tema dan font direset ke default.");
+                ShowToast("Pengaturan Direset", "Tema dan tipografi dikembalikan ke pengaturan default (Dark Mode & Crimson Red).", "Info", "↺");
             });
 
             SelectRatioFilterCommand = new RelayCommand(param =>
@@ -1362,6 +1485,7 @@ namespace RRes.ViewModels
                             UpdateStatusMessage = result.Message;
                             UpdateStatusColor = "#10B981";
                             AddLog($"Update ditemukan di GitHub: v{result.LatestVersion}");
+                            ShowToast("Pembaruan Tersedia!", $"Versi baru v{result.LatestVersion} terdeteksi di GitHub.", "Info", "🚀");
                         }
                         else
                         {
@@ -1369,6 +1493,7 @@ namespace RRes.ViewModels
                             UpdateStatusMessage = $"✓ Anda menggunakan versi terbaru (v{result.CurrentVersion}).";
                             UpdateStatusColor = "#10B981";
                             AddLog("Versi RRes adalah yang terbaru.");
+                            ShowToast("Versi Terbaru", $"Aplikasi sudah dalam versi terbaru (v{result.CurrentVersion}).", "Success", "✓");
                         }
                     }
                     else
@@ -1376,12 +1501,14 @@ namespace RRes.ViewModels
                         UpdateStatusMessage = result.Message;
                         UpdateStatusColor = "#EF4444";
                         AddLog($"Gagal cek update: {result.Message}");
+                        ShowToast("Cek Update Gagal", result.Message, "Warning", "⚠");
                     }
                 }
                 catch (Exception ex)
                 {
                     UpdateStatusMessage = $"Error: {ex.Message}";
                     UpdateStatusColor = "#EF4444";
+                    ShowToast("Error Update", ex.Message, "Error", "✕");
                 }
                 finally
                 {
@@ -1471,6 +1598,8 @@ namespace RRes.ViewModels
                             RequestShowNotificationAction?.Invoke(
                                 "Pembaruan RRes Tersedia",
                                 $"Versi baru v{result.LatestVersion} tersedia untuk diunduh ({result.ExeAssetName ?? "installer .exe"}).");
+
+                            ShowToast("Pembaruan Tersedia!", $"Versi baru v{result.LatestVersion} terdeteksi di GitHub.", "Info", "🚀");
                         });
                     }
                 }
@@ -1867,22 +1996,31 @@ namespace RRes.ViewModels
                 {
                     StatusMessage = $"Sukses! {targetW}x{targetH} @ {targetHz}Hz{sensNote}{rawAccelNote} diterapkan ke {(SyncDesktopResolution ? "Desktop & " : "")}{configMsg}";
                     StatusType = "Success";
+                    ShowToast("Resolusi Berhasil Diterapkan", $"{targetW}x{targetH} @ {targetHz}Hz aktif di {(SyncDesktopResolution ? "Desktop & " : "")}{configMsg}", "Success", "✓");
+
+                    if (IsBackupChecked)
+                    {
+                        AddLog("Backup file config otomatis berhasil disimpan (.bak).");
+                    }
                 }
                 else if (!desktopSuccess)
                 {
                     StatusMessage = $"Config tersimpan, namun display desktop: {desktopMsg}";
                     StatusType = "Warning";
+                    ShowToast("Peringatan Display", desktopMsg, "Warning", "⚠");
                 }
                 else
                 {
                     StatusMessage = configMsg;
                     StatusType = "Error";
+                    ShowToast("Gagal Menerapkan Config", configMsg, "Error", "✕");
                 }
             }
             catch (Exception ex)
             {
                 StatusMessage = $"Terjadi error: {ex.Message}";
                 StatusType = "Error";
+                ShowToast("Gagal Mengubah Resolusi", ex.Message, "Error", "✕");
             }
             finally
             {
@@ -1890,26 +2028,49 @@ namespace RRes.ViewModels
             }
         }
 
-        private void ExecuteApplyAndLaunch()
+        private async void ExecuteApplyAndLaunch()
         {
-            ExecuteApplyResolution();
+            if (IsApplyingResolution) return;
 
-            // Berikan jeda singkat agar Windows selesai menerapkan perubahan display registry (CDS_UPDATEREGISTRY) secara bersih
-            System.Threading.Thread.Sleep(250);
-
-            // Eksekusi peluncuran game VALORANT
-            var (ok, msg) = ValorantLauncher.LaunchGame();
-            if (ok)
+            try
             {
-                StatusMessage = $"{StatusMessage} -> {msg}";
-                StatusType = "Success";
-                AddLog($"Game VALORANT diluncurkan: {msg}");
+                IsApplyingResolution = true;
+
+                // Visual feedback loading delay agar UI sempat me-render status "APPLYING..." & spinner
+                await Task.Delay(120);
+
+                // 1. Eksekusi penerapan resolusi & config
+                ExecuteApplyResolution();
+
+                // 2. Berikan jeda singkat agar Windows menyelesaikan perubahan display registry CDS_UPDATEREGISTRY
+                await Task.Delay(350);
+
+                // 3. Eksekusi peluncuran game VALORANT secara asynchronous
+                var (ok, msg) = await Task.Run(() => ValorantLauncher.LaunchGame());
+                if (ok)
+                {
+                    StatusMessage = $"{StatusMessage} -> {msg}";
+                    StatusType = "Success";
+                    AddLog($"Game VALORANT diluncurkan: {msg}");
+                    ShowToast("VALORANT Diluncurkan", "Resolusi diterapkan dan game berhasil dibuka!", "Success", "▶");
+                }
+                else
+                {
+                    StatusMessage = $"{StatusMessage} -> {msg}";
+                    StatusType = "Warning";
+                    AddLog($"Peringatan peluncuran game: {msg}");
+                    ShowToast("Peringatan Peluncuran", msg, "Warning", "⚠");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                StatusMessage = $"{StatusMessage} -> {msg}";
-                StatusType = "Warning";
-                AddLog($"Peringatan peluncuran game: {msg}");
+                StatusMessage = $"Gagal meluncurkan game: {ex.Message}";
+                StatusType = "Error";
+                ShowToast("Gagal Launch", ex.Message, "Error", "✕");
+            }
+            finally
+            {
+                IsApplyingResolution = false;
             }
         }
 
@@ -1918,6 +2079,7 @@ namespace RRes.ViewModels
             var (ok, msg) = ValorantLauncher.LaunchGame();
             StatusMessage = $"Quick Launch: {msg}";
             StatusType = ok ? "Success" : "Warning";
+            ShowToast(ok ? "VALORANT Diluncurkan" : "Gagal Launch", msg, ok ? "Success" : "Warning", "⚡");
         }
 
         private void ExecuteRevertToNative()
@@ -1936,11 +2098,13 @@ namespace RRes.ViewModels
 
                 StatusMessage = $"Reset ke Native ({native.Width}x{native.Height} @ {native.RefreshRate}Hz): {deskMsg}";
                 StatusType = deskOk ? "Success" : "Warning";
+                ShowToast("Kembali ke Native", $"Resolusi monitor dan config di-reset ke {native.Width}x{native.Height} @ {native.RefreshRate}Hz", deskOk ? "Success" : "Warning", "↺");
             }
             catch (Exception ex)
             {
                 StatusMessage = $"Gagal mengembalikan ke native: {ex.Message}";
                 StatusType = "Error";
+                ShowToast("Gagal Reset Native", ex.Message, "Error", "✕");
             }
             finally
             {
@@ -2478,6 +2642,7 @@ namespace RRes.ViewModels
                 StatusType = "Success";
                 AddLog("Auto-Revert: Resolusi desktop dan konfigurasi game dikembalikan ke Native.");
                 RequestShowNotificationAction?.Invoke("Resolusi Dikembalikan", "VALORANT telah ditutup. Resolusi monitor dikembalikan ke Native.");
+                ShowToast("Auto-Revert: Game Ditutup", "VALORANT telah keluar. Resolusi monitor berhasil dikembalikan ke Native.", "Success", "↺");
             });
         }
 

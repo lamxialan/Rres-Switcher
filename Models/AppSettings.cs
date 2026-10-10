@@ -13,8 +13,8 @@ namespace RRes.Models
         // UI/UX Customization: Theme & Typography
         public string ThemeMode { get; set; } = "Dark"; // "Dark", "OLED", "Midnight", "Light"
         public string AccentColor { get; set; } = "#FF4655"; // Valorant Crimson Red
-        public string FontFamily { get; set; } = "Segoe UI Variable";
-        public double BaseFontSize { get; set; } = 12.5;
+        public string FontFamily { get; set; } = "Segoe UI Variable Display";
+        public double BaseFontSize { get; set; } = 12.0;
 
         public DateTime LastUpdated { get; set; } = DateTime.Now;
     }
