@@ -89,7 +89,7 @@ namespace RRes.ViewModels
         private string _updateStatusColor = "#8B949E";
         private bool _hasUpdateAvailable;
         private string _latestVersionString = "";
-        private string _latestReleaseUrl = "https://github.com/muhbr/RRes/releases";
+        private string _latestReleaseUrl = "https://github.com/lamxialan/Rres-Switcher/releases";
         private bool _isMinimizeToTrayEnabled = true;
 
         // Raw Accel Companion State
@@ -1168,7 +1168,7 @@ namespace RRes.ViewModels
                 {
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = "https://github.com/muhbr/RRes",
+                        FileName = "https://github.com/lamxialan/Rres-Switcher",
                         UseShellExecute = true
                     });
                 }
@@ -1356,8 +1356,10 @@ namespace RRes.ViewModels
                         {
                             HasUpdateAvailable = true;
                             LatestVersionString = result.LatestVersion;
-                            LatestReleaseUrl = result.ReleaseUrl;
-                            UpdateStatusMessage = $"Pembaruan baru v{result.LatestVersion} tersedia!";
+                            LatestReleaseUrl = !string.IsNullOrWhiteSpace(result.ExeDownloadUrl)
+                                ? result.ExeDownloadUrl
+                                : result.ReleaseUrl;
+                            UpdateStatusMessage = result.Message;
                             UpdateStatusColor = "#10B981";
                             AddLog($"Update ditemukan di GitHub: v{result.LatestVersion}");
                         }
@@ -1393,7 +1395,7 @@ namespace RRes.ViewModels
                 {
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = string.IsNullOrWhiteSpace(LatestReleaseUrl) ? "https://github.com/muhbr/RRes/releases" : LatestReleaseUrl,
+                        FileName = string.IsNullOrWhiteSpace(LatestReleaseUrl) ? "https://github.com/lamxialan/Rres-Switcher/releases" : LatestReleaseUrl,
                         UseShellExecute = true
                     });
                 }
@@ -1434,6 +1436,49 @@ namespace RRes.ViewModels
             _ = CheckServerPingAsync();
             _ = ScanJunkAsync();
             _ = LoadCrosshairsAsync();
+
+            // Pengecekan update otomatis di background agar startup tetap instan dan lancar
+            StartBackgroundUpdateCheck();
+        }
+
+        /// <summary>
+        /// Menjalankan pengecekan rilis GitHub di background thread setelah jeda singkat
+        /// agar tidak membebani atau memperlambat pembukaan jendela utama saat startup.
+        /// </summary>
+        private void StartBackgroundUpdateCheck()
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    // Beri jeda 2 detik agar rendering jendela utama & transisi UI selesai lebih dahulu
+                    await Task.Delay(2000);
+
+                    var result = await _updateService.CheckForUpdatesAsync();
+                    if (result.IsSuccess && result.HasUpdate)
+                    {
+                        Application.Current?.Dispatcher.Invoke(() =>
+                        {
+                            HasUpdateAvailable = true;
+                            LatestVersionString = result.LatestVersion;
+                            LatestReleaseUrl = !string.IsNullOrWhiteSpace(result.ExeDownloadUrl)
+                                ? result.ExeDownloadUrl
+                                : result.ReleaseUrl;
+                            UpdateStatusMessage = result.Message;
+                            UpdateStatusColor = "#10B981";
+                            AddLog($"[Auto-Update] Versi rilis baru v{result.LatestVersion} terdeteksi di GitHub.");
+
+                            RequestShowNotificationAction?.Invoke(
+                                "Pembaruan RRes Tersedia",
+                                $"Versi baru v{result.LatestVersion} tersedia untuk diunduh ({result.ExeAssetName ?? "installer .exe"}).");
+                        });
+                    }
+                }
+                catch
+                {
+                    // Silent fail saat background auto-check agar tidak mengganggu pengalaman pengguna
+                }
+            });
         }
 
         public async Task CheckServerPingAsync()
